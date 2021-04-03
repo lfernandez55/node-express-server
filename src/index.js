@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import {testAPI, eraseDB, seedDB, allUsers, allUsersPopulate} from './controllers/UserController'
+import {testAPI, eraseDB, seedDB, allUsers, allUsersPopulate, createUser, getUser, updateUser, updateUserCar } from './controllers/UserController'
 import mongoose from 'mongoose'
 
 mongoose.connect("mongodb://localhost:27017/onemanydb",{
@@ -26,6 +26,11 @@ app.get('/seedDB', seedDB);
 app.get('/eraseDB', eraseDB);
 app.get('/users', allUsers);
 app.get('/usersPopulate', allUsersPopulate);
+
+app.post('/createUser', createUser);
+app.get('/getUser', getUser);
+app.put('/updateUser', updateUser);
+app.put('/updateUserCar', updateUserCar);
 
 app.listen(process.env.PORT, () =>
   console.log(`Example app listening on port ${process.env.PORT}!`),
