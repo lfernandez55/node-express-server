@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONGO CRUD METHODS</title>
+    <script>
+        function fetchIt(url,method){
+            fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+                //body: JSON.stringify(user),
+                //credentials: "same-origin"
+                credentials: "include"
+            })
+                .then((response) => {
+                    return response.json();
+                })
+                .then((resp) => {
+                    console.log(resp)
+                    document.getElementById('message').innerHTML = JSON.stringify(resp)
+                })
+                .catch((err) => {
+                    document.getElementById('message').innerHTML = 'Error: ' + err.message;
+                });
+
+        }
+
+
+    </script>
+    <style>
+        body{
+            font-size: 1.5em;
+        }
+        *{
+            margin: 0;
+        }
+        #container{
+            display: flex;
+            flex-direction: row;
+            
+        }
+        #container > ul, #container > div{
+            width: 25%;
+            border: 1px solid red;
+        }
+        #container > div{
+            width: 75%;
+            border: 1px solid red;
+        }            
+    </style>
+</head>
+<body>
+<h2>CRUD METHODS</h2>
+<div id="container">
+    <ul>
+        <li><a href="#" onclick="fetchIt('/','GET')">/</a></li>
+        <li><a href="#" onclick="fetchIt('/test','GET')">/test</a></li>
+        <li><a href="#" onclick="fetchIt('/eraseDB','GET')">/eraseDB</a></li>
+        <li><a href="#" onclick="fetchIt('/seedDB','GET')">/seedDB</a></li>
+        <li><a href="#" onclick="fetchIt('/users','GET')">/users (get all users)</a></li>
+    </ul>
+    <div id="message">Message Here</div>
+</div>
+
+</body>
+</html>
