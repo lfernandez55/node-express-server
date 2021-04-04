@@ -83,7 +83,7 @@ export const allUsersPopulate = async (req, res, next) => {
 
 // SOME CRUD METHODS
 
-//create
+//create (see https://stackoverflow.com/questions/46457071/using-mongoose-promises-with-async-await) )
 export const createUser = async (req, res, next) => {
     try{
         let user = new User()
@@ -103,14 +103,32 @@ export const createUser = async (req, res, next) => {
     }
 }
 
+/* Alternate way to create user:
+
+export const createUser = (req, res, next) => {
+    let user = new User()
+    user.name = "OrphanAnnie"
+    user.age = "10"
+    // the below approoach uses the callback approach detailed here:
+    // https://stackoverflow.com/questions/41896865/proper-error-handling-in-mongoose-query-exec
+    user.save((err)=> {
+        if(err){
+            res.json({success: false, message: "User creation failed", err: err})
+            res.end()
+        }else{
+            res.json({success: true, message: "User creation succeeded"})
+            res.end()
+        }
+    })
+}
+*/
+
 //find
 export const getUser = async (req, res, next) => {
     try{
         let found = await User.find({name: "OrphanAnnie"})
         console.log(found)
-
-        let msg = found
-        res.status(200).json(msg);  
+        res.status(200).json(found);  
     } catch (err) {
         console.log("Error generated while creating user....")
         console.log(err)
@@ -118,6 +136,19 @@ export const getUser = async (req, res, next) => {
         res.status(500).json(msg); 
     }
 }
+
+// Alternate find
+/*
+export const getUser = (req, res, next) => {
+    User.find({ name: "OrphanAnnie" })
+        .then(function (user) {
+            return res.json(user);
+        })
+        .catch(function (err) {
+            return res.json(err);
+        });
+}
+*/
 
 // uddate
 export const updateUser = async (req, res, next) => {
@@ -169,7 +200,18 @@ export const updateUserCar = async (req, res, next) => {
 }
 
 //delete user
-
+export const deleteUser = async (req, res, next) => {
+    try{
+        await User.deleteOne({name: "OrphanAnnie"})
+        let msg = {message: "User deleted...."}
+        res.status(200).json(msg);  
+    } catch (err) {
+        console.log("Error generated while creating user....")
+        console.log(err)
+        let msg = {message: "Something went wrong when getting user...."}
+        res.status(500).json(msg); 
+    }
+}
 
 
 
@@ -181,20 +223,5 @@ export const userAPI = async (req, res, next) => {
 }
 
 
-export const createUserAPI = (req, res, next) => {
-    let user = new User()
-    user.name = "Lucy"
-    user.age = "34"
-    // the below approoach uses the callback approach detailed here:
-    // https://stackoverflow.com/questions/41896865/proper-error-handling-in-mongoose-query-exec
-    user.save((err)=> {
-        if(err){
-            res.json({success: false, message: "User creation failed", err: err})
-            res.end()
-        }else{
-            res.json({success: true, message: "User creation succeeded"})
-            res.end()
-        }
-    })
-}
+
 */

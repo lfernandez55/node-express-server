@@ -53,6 +53,11 @@
 </head>
 <body>
 <h2>CRUD METHODS</h2>
+<h3>Note that for an API the urls on many of these CRUD methods would need to be changed to the standard RESTful API syntax, including:
+    GET /users, GET /users/:id, POST /users, PUT /users, DELETE users/:id .  This demo is only illustrating what these look like on 
+    the backend. 
+</h3>
+
 <div id="container">
     <ul>
         <li><a href="#" onclick="fetchIt('/','GET')">/</a></li>
@@ -65,6 +70,7 @@
         <li><a href="#" onclick="fetchIt('/getUser','GET')">/getUser (OrphanAnnie)</a></li>
         <li><a href="#" onclick="fetchIt('/updateUser','PUT')">/updateUser (Change OrphanAnnie to age 5)</a></li>
         <li><a href="#" onclick="fetchIt('/updateUserCar','PUT')">/updateUserCar (Make Annie an owner of a Ford)</a></li>
+        <li><a href="#" onclick="fetchIt('/deleteUser','DELETE')">/deleteUser (Delete Annie)</a></li>
     </ul>
     <div id="message">Message Here</div>
 </div>
