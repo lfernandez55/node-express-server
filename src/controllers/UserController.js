@@ -1,5 +1,7 @@
 import { User } from '../models/UserModel'
 import { Car } from '../models/CarModel'
+import { Org } from '../models/OrgModel'
+import { Person } from '../models/PersonModel'
 
 export const testAPI = (req, res, next) => {
     let foo = {boo: "test"}
@@ -10,6 +12,8 @@ export const eraseDB = async (req, res, next) => {
     try{
         await User.remove({})
         await Car.remove({})
+        await Org.remove({})
+        await Person.remove({})
         let msg = {message: "Collections erased"}
         res.status(200).json(msg);  
     } catch (err) {
@@ -48,6 +52,51 @@ export const seedDB = async (req, res, next) => {
         user2.name = "Mick"
         user2.age = "66"
         await user2.save()
+
+        let org = new Org()
+        org.name = "WSU"
+        await org.save()
+
+        let org1 = new Org()
+        org1.name = "College of Science"
+        org1.parent = org
+        await org1.save()
+
+        let org2 = new Org()
+        org2.name = "College of Health Professions"
+        org2.parent = org
+        await org2.save()
+
+        let org3 = new Org()
+        org3.name = "Nursing"
+        org3.parent = org2
+        await org3.save()
+        org2.children.push(org3)
+        await org2.save()
+
+        org.children.push(org1)
+        org.children.push(org2)
+        await org.save()
+
+        let person1 = new Person()
+        person1.name = "Allan"
+
+        let person2 = new Person()
+        person2.name = "Bob"
+
+        let person3 = new Person()
+        person3.name = "Charlie"
+
+        let person4 = new Person()
+        person4.name = "Dan"
+        person4.save()
+
+        person3.friends.push(person4)
+        person3.save();
+        person2.friends.push(person3)
+        person2.save()
+        person1.friends.push(person2)
+        person1.save()
 
         let msg = {message: "DB seeded!!!"}
         res.status(200).json(msg);  
@@ -212,6 +261,33 @@ export const deleteUser = async (req, res, next) => {
         res.status(500).json(msg); 
     }
 }
+
+export const getOrgs = async (req, res, next) => {
+    try{
+        //let allOrgs = await Org.findOne({name: "WSU"}).populate('children')
+        let allOrgs = await Org.findOne({name: 'WSU'}).populate({path: 'children', populate: { path: 'children', populate: { path: 'children' } }});
+        console.log('debugxxxxxxxxxxxxxxxx', allOrgs)
+        res.json(allOrgs)
+    } catch (err) {
+        console.log("ERROR GENERATED:")
+        console.log(err)
+    }
+
+}
+
+export const getPersons = async (req, res, next) => {
+    try{
+        let allPersons = await Person.findOne({ name: 'Allan' }).populate({path: 'friends', populate: { path: 'friends', populate: { path: 'friends' } }
+        });
+        console.log('debugAllPersons', allPersons)
+        res.json(allPersons)
+    } catch (err) {
+        console.log("ERROR GENERATED:")
+        console.log(err)
+    }
+
+}
+
 
 
 
